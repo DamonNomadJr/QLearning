@@ -1,4 +1,5 @@
 # QLearning
+A rework of https://github.com/jl4r1991/SnakeQlearning
 
 ## Dependencies
 - python 3
