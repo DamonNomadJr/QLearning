@@ -7,10 +7,10 @@ import json
 pygame.init()
 
 #%% CONSTANTS
-YELLOW = (255, 255, 102)
+WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-BLUE = (50, 153, 213)
+LIGHTGRAY = (150, 150, 150)
+DARKGRAY = (80, 80, 80)
 
 BLOCK_SIZE = 10 
 DIS_WIDTH = 600
@@ -102,7 +102,7 @@ def GameLoop():
             del snake_list[0]
 
         # Draw food, snake and update score
-        dis.fill(BLUE)
+        dis.fill(LIGHTGRAY)
         DrawFood(foodx, foody)
         DrawSnake(snake_list)
         DrawScore(length_of_snake - 1)
@@ -117,11 +117,11 @@ def GameLoop():
     return length_of_snake - 1, reason
 
 def DrawFood(foodx, foody):
-    pygame.draw.rect(dis, GREEN, [foodx, foody, BLOCK_SIZE, BLOCK_SIZE])   
+    pygame.draw.rect(dis, DARKGRAY, [foodx, foody, BLOCK_SIZE, BLOCK_SIZE])   
 
 def DrawScore(score):
     font = pygame.font.SysFont("comicsansms", 35)
-    value = font.render(f"Score: {score}", True, YELLOW)
+    value = font.render(f"Score: {score}", True, WHITE)
     dis.blit(value, [0, 0])
 
 def DrawSnake(snake_list):
@@ -131,17 +131,14 @@ def DrawSnake(snake_list):
 
 
 #%%
-game_count = 1
+game_count = 100
 
 learner = Learner.Learner(DIS_WIDTH, DIS_HEIGHT, BLOCK_SIZE)
 learner.LoadQvalues()
 
 while True:
     learner.Reset()
-    if game_count > 100:
-        learner.epsilon = 0
-    else:
-        learner.epsilon = .1
+    learner.epsilon = 0
     score, reason = GameLoop()
     print(f"Games: {game_count}; Score: {score}; Reason: {reason}") # Output results of each game to console to monitor as agent is training
     GameResaults(game_count, score)

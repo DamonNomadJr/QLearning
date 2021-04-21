@@ -73,7 +73,12 @@ class Learner(object):
                 sN = history[0]['state']
                 aN = history[0]['action']
                 state_str = self._GetStateStr(sN)
-                reward = -1
+                if (reason == "screen"):
+                    reward = -20
+                    print ("Screen")
+                else:
+                    reward = -10
+                    print ("Self")
                 self.qvalues[state_str][aN] = (1-self.lr) * self.qvalues[state_str][aN] + self.lr * reward # Bellman equation - there is no future state since game is over
                 reason = None
             else:
@@ -88,11 +93,11 @@ class Learner(object):
                 y2 = s1.distance[1] # y distance at previous state
                 
                 if s0.food != s1.food: # Snake ate a food, positive reward
-                    reward = 1
+                    reward = 10
                 elif (abs(x1) > abs(x2) or abs(y1) > abs(y2)): # Snake is closer to the food, positive reward
-                    reward = 1
+                    reward = 5
                 else:
-                    reward = -1 # Snake is further from the food, negative reward
+                    reward = -8 # Snake is further from the food, negative reward
                     
                 state_str = self._GetStateStr(s0)
                 new_state_str = self._GetStateStr(s1)
