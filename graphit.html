@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        <div id="tester" style="width:100%;height:80%;"></div>
+        <p>
+        Select a file from your computer to being read as text.
+        </p>
+        <input type="file" id="filetoRead" />
+    </body>
+    <script>
+        GRPH = document.getElementById('tester');
+        document.getElementById("filetoRead").addEventListener("change",function(){
+                var file = this.files[0];
+
+                if (file) {
+                    var reader = new FileReader();
+                    
+                    reader.onload = function (evt) {
+                        console.log(evt);
+                        json = JSON.parse(evt.target.result);
+                        console.log(json);
+                        Grapher(json);
+                    };
+
+                    reader.onerror = function (evt) {
+                        console.error("An error ocurred reading the file",evt);
+                    };
+
+                    reader.readAsText(file, "UTF-8");
+                }
+            },false);
+        function Grapher(data) {
+            let tuple = {x: [], y: [], type: 'scatter', name: 'Score'};
+            let avrg = {x: [], y: [], type: 'scatter', name: 'Average'};
+            let high = {x: [], y: [], type: 'scatter', name: 'Highest Score'};
+            let sum = 0;
+            let highest = 0;
+            for(i = 100; data[i] != null; i++){
+                console.log(data[i]);
+                tuple.x.push(i-99);
+                tuple.y.push(data[i].score);
+                avrg.x.push(i-99);
+                sum += data[i].score;
+                avrg.y.push(sum/i);
+                high.x.push(i-99);
+                if (highest < data[i].score) highest = data[i].score
+                high.y.push(highest);
+            }
+            console.log(tuple);
+            Plotly.newPlot(GRPH, [tuple, avrg, high]);
+        }
+    </script>
+</html>
